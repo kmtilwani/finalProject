@@ -1,0 +1,457 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<title>Track&amp;Train</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/jquery-ui.css" />
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script> 
+	<script type="text/javascript" src="js/datafile.js"></script>
+	<script type="text/javascript" src="js/jspdf.debug.js"></script>
+	<script type="text/javascript" src="js/jspdf.min.js"></script>
+	
+	<link href="css/bootstrap.min.css" rel="stylesheet"></link>
+	<link rel="stylesheet" href="css/styling.css" /> <!-- CUSTOM CSS -->
+	
+	
+</head>
+
+<body>
+<script type="text/javascript">
+
+ $(document).ready(function() {
+	
+	console.log(jsonObject.start);
+	console.log(jsonObject.start.stations);
+	$('#travelDate').datepicker();
+	
+	for(i=0;i<jsonObject.start.stations.length;i++){
+			$('#sourceStation')
+				.append($("<option></option>")
+							.attr("value",i)
+							.text(jsonObject.start.stations[i]));
+							
+			$('#Destination')
+				.append($("<option></option>")
+							.attr("value",i)
+							.text(jsonObject.start.stations[i]));				
+	}
+	
+/*var doc = new jsPDF();
+   var specialElementHandlers = {
+    '#editor': function (element, renderer) {
+        return true;
+    }
+   };
+
+   $('#cmd').click(function () {
+    doc.fromHTML($('#ticketRow').html(), 15, 15, {
+        'width': 170,
+            'elementHandlers': specialElementHandlers
+    });
+    doc.save('sample-file.pdf'); 
+});
+	*/
+
+		 
+});
+	var sourceStationValue;
+	var destinationStationValue;
+	var travellDateValue;
+	var classCompartmentValue;
+	
+
+	function generateFareFunction(){
+		
+		 sourceStationValue = $('#sourceStation').val();
+		 destinationStationValue = $('#Destination').val();
+		 travellDateValue = $('#travelDate').val();
+		 classCompartmentValue = $('#sel1').val();
+		
+		if(sourceStationValue == "" || destinationStationValue == "" || travellDateValue == ""){
+			 
+		}
+		else if(sourceStationValue == destinationStationValue){
+			alert('Source and Destination must be different');
+			
+		}else{
+			$('#bookTicketButton').show();
+			$('#resetButton').show();
+			$('#generateFare').hide();
+			var key = sourceStationValue + '-' + destinationStationValue + '-' + classCompartmentValue;
+		
+			console.log(sourceStationValue);
+			console.log(destinationStationValue);
+			console.log(classCompartmentValue);
+			console.log(key);
+			console.log(jsonObject.fare[key]);
+			var fareMoney = jsonObject.fare[key];
+			
+			//$('#fareVal').val(fareMoney);
+			document.getElementById('fareVal').innerHTML = 'Rs ' + fareMoney ;
+			
+			
+		}
+		
+	}
+	
+	function showTicket(){
+		$('#ticketRow').show();
+		
+			
+		
+		document.getElementById('detailSourceStation').innerHTML =  $("#sourceStation option:selected").text(); 
+		document.getElementById('detaildestinationStation').innerHTML =  $("#Destination option:selected").text(); 
+		document.getElementById('detailDateTime').innerHTML =  travellDateValue ;
+		document.getElementById('detailclass').innerHTML = $("#sel1 option:selected").text(); 
+		$('#fareRow').hide();
+		
+	
+	
+	}
+	
+	function generatePDF(){
+		$('#cmd').hide();
+		window.print();
+	
+	}
+	
+	
+	
+
+</script>
+	<nav class="navbar navbar-default">
+	  <div class="container">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a class="navbar-brand" href="javascript:void(0);"><span class="glyphicon glyphicon-phone" aria-hidden="true"></span>1 - 555 - 555 - 555</a>
+	    </div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="border:none;">
+		  
+		 
+		  <ul class="nav navbar-nav navbar-right">
+			<li data-toggle="modal" data-target="#myModalNorm"><a href="#">Signup</a></li>
+			<li data-toggle="modal" data-target="#myModalHorizontal"><a href="#">Login</a></li>
+		  </ul>
+		  <!-- Modal -->
+				<div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog" 
+					 aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<!-- Modal Header -->
+							<div class="modal-header">
+								<button type="button" class="close" 
+								   data-dismiss="modal">
+									   <span aria-hidden="true">&times;</span>
+									   <span class="sr-only">Close</span>
+								</button>
+								<h4 class="modal-title" id="myModalLabel">
+								   Login
+								</h4>
+							</div>
+							
+							<!-- Modal Body -->
+							<div class="modal-body">
+								
+								<form class="form-horizontal" role="form">
+								  <div class="form-group">
+									<label  class="col-sm-2 control-label"
+											  for="inputEmail3">Email</label>
+									<div class="col-sm-10">
+										<input type="email" class="form-control" 
+										id="inputEmail3" placeholder="Email"/>
+									</div>
+								  </div>
+								  <div class="form-group">
+									<label class="col-sm-2 control-label"
+										  for="inputPassword3" >Password</label>
+									<div class="col-sm-10">
+										<input type="password" class="form-control"
+											id="inputPassword3" placeholder="Password"/>
+									</div>
+								  </div>
+								  <div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10">
+									  <div class="checkbox">
+										<label>
+											<input type="checkbox"/>Remember me
+										</label>
+									  </div>
+									</div>
+								  </div>
+								  <div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10">
+									  <button type="submit" class="btn btn-default">Sign in</button>
+									</div>
+								  </div>
+								</form>
+								
+								
+							</div>
+							
+							<!-- Modal Footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default"
+										data-dismiss="modal">
+											Close
+								</button>
+							   
+							</div>
+						</div>
+					</div>
+				</div> <!-- login modal end -->
+
+				<!-- Modal -->
+				<div class="modal fade" id="myModalNorm" tabindex="-1" role="dialog" 
+					 aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<!-- Modal Header -->
+							<div class="modal-header">
+								<button type="button" class="close" 
+								   data-dismiss="modal">
+									   <span aria-hidden="true">&times;</span>
+									   <span class="sr-only">Close</span>
+								</button>
+								<h4 class="modal-title" id="myModalLabel">
+								   Signup
+								</h4>
+							</div>
+							
+							<!-- Modal Body -->
+							<div class="modal-body">
+								
+								<form role="form">
+								<div class="form-group">
+									<label for="exampleInputusername">Username</label>
+									  <input type="text" class="form-control"
+									  id="exampleInputusername" placeholder="Enter Username"/>
+								  </div>
+								  <div class="form-group">
+									<label for="exampleInputEmail1">Email address</label>
+									  <input type="email" class="form-control"
+									  id="exampleInputEmail1" placeholder="Enter email"/>
+								  </div>
+								  <div class="form-group">
+									<label for="exampleInputPassword1">Password</label>
+									  <input type="password" class="form-control"
+										  id="exampleInputPassword1" placeholder="Password"/>
+								  </div>
+								  <div class="checkbox">
+									<label>
+										<input type="checkbox"/> Agree
+									</label>
+								  </div>
+								  <button type="submit" class="btn btn-default">Submit</button>
+								</form>
+								
+								
+							</div>
+							
+							<!-- Modal Footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default"
+										data-dismiss="modal">
+											Close
+								</button>
+								
+							</div>
+						</div>
+					</div>
+				</div> <!-- Signup Modal End -->
+		</div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+	
+	<nav class="navbar navbar-inverse navbar2">
+	  <div class="container">
+		<div class="navbar-header">
+		  <a class="navbar-brand" href="index.html">
+			<img class="img-responsive" alt="Brand" src="img/log.png">
+		  </a>
+		</div>
+	  </div>
+    </nav>
+	
+	<div class="container-fluid bgimage" style="background:url(img/station.jpg) no-repeat center; background-size:cover;height:650px;">
+		<div class="row" id="fareRow" >
+			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-0"> <!-- first extra col -->
+			</div >
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="background-color:rgba(255,255,255,0.3);margin-top: 8%;padding-top:6px"> <!-- booking box -->
+				<form onsubmit="return false;">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<p class="travelling">Travelling Route</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+						
+						<select id="sourceStation" class="form-control" required>
+							<option value="">Source Station</option>
+						</select>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 col-xs-0">
+						
+					</div>
+					<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+						<!--<input type="text" class="form-control" id="to" placeholder="Destination"> -->
+						<select id="Destination" class="form-control" required>
+							<option value="">Destination Station</option>
+						</select>
+					</div>
+				</div>
+				<div class="row" style="margin-top:7px;">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<p class="travelling">Travelling Date</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+						<input id="travelDate" placeholder="Journey Date..." class="form-control" name="travellingdate" required>
+					</div>
+				</div>
+				<div class="row" style="margin-top:7px;">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<p class="travelling">Class</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+						<select class="form-control" id="sel1" required>
+						  <option value="0">General</option>
+						  <option value="1">SL</option>
+						  <option value="2">AC3</option>
+						  <option value="3">AC2</option>
+						  <option value="4">AC1</option>
+						</select>
+					</div>
+				</div>
+				<div class="row" style="margin-top:7px;text-align:center;">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<button type="submit" disabled="disabled" class="btn btn-primary" id="fareVal" style="background-color:rgba(51,122,183,0.65);"><b>Fare</b></button>  
+						
+						
+					</div>
+				</div>
+				<div class="row" style="margin-top:22px;text-align:center;padding-bottom:22px;">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<button type="submit"  class="btn btn-primary" onclick=" generateFareFunction(); " id="generateFare">Generate Fare</button> 
+						<!-- <a href="javascript:void(0);" onclick=" generateFareFunction(); " class="btn btn-primary" id="generateFare" >Generate Fare </a> -->
+						<button type="submit" class="btn btn-danger" id="resetButton" style="display:none;" onClick="window.location.reload()">Reset</button>
+						<button type="submit" onclick="showTicket();" class="btn btn-success" id="bookTicketButton" style="display:none;">Book Ticket</button>
+						</div>
+					</div>
+				
+				
+			</form>	
+			</div> <!-- booking box END -->
+			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-0"> <!-- third extra col -->
+			</div>
+		</div>
+		
+		<div class="row" id="ticketRow" style="display:none;">  <!-- booked ticket box -->
+			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-2">
+			</div>
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-8" style="background:url(img/ticketbg1.png) no-repeat center; background-size:cover; margin-top:5%;height:320px;">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 uppannel">
+					<h3 style="color:white;text-align:right">TICKET<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></h3>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 midpannel">
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+								<img class="img-responsive" id="imagesize" src="img/barcode1.gif" alt="barcode" />
+							</div>
+							<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" id="pading" style="padding-top:5px; line-height: 1.234;">
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<p class="ticketsummary"><b>Source Station</b></p>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<p class="ticketsummary" id="detailSourceStation"></p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<p class="ticketsummary"><b>Destination Station</b></p>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<p class="ticketsummary" id="detaildestinationStation"></p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<p class="ticketsummary"><b>Travelling Date</b></p>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<p class="ticketsummary" id="detailDateTime"></p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<p class="ticketsummary"><b>Class</b></p>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<p class="ticketsummary" id="detailclass"></p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<p class="ticketsummary"><b>Booking Status</b></p>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<p class="ticketsummary"><b>Confirmed</b></p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-12 col-md-12 col-sm-6 col-xs-6" style="padding-bottom: 15px;">
+										<button type="submit" class="btn btn-danger" onclick="generatePDF();" id="cmd">Print Ticket</button>
+									</div>
+									
+								</div>
+								
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 lowerpannel">
+					</div>
+				</div>
+			
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-2">
+			</div>
+		</div>
+		<div id="editor"></div>
+	</div>
+		
+		<nav class="navbar navbar-default footer" >
+         <div class="container ">
+		 <div class="row">
+		 <div class="col-lg-12 col-md-12  col-sm-12  col-xs-12">
+			<p><div class="footercontent">© Copyright 2016 by Kamlesh Tilwani | All rights reserved.</div></p>
+          </div>
+		  
+          </div>
+          </div>			
+          </div>
+   </nav>
+		
+</body>
+</html>
